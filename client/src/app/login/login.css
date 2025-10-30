@@ -1,0 +1,62 @@
+section {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  width: 320px;
+  text-align: center;
+}
+
+/* Titre */
+h1 {
+  color: #333;
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+}
+
+/* Conteneur des champs */
+.all_login {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Champs de texte */
+input[type="text"],
+input[type="password"] {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+/* Effet au focus */
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #5563DE;
+  box-shadow: 0 0 5px rgba(85, 99, 222, 0.4);
+  outline: none;
+}
+
+/* Bouton principal */
+button.primary {
+  background-color: #5563DE;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Effet au survol */
+button.primary:hover {
+  background-color: #4050c8;
+}
+
+/* Effet au clic */
+button.primary:active {
+  transform: scale(0.98);
+}

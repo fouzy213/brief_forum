@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model aime {
+  id_utilisateur Int
+  id_snippet     Int
+  snippet        snippet     @relation(fields: [id_snippet], references: [id_snippet], onDelete: Cascade, onUpdate: NoAction)
+  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_utilisateur, id_snippet])
+}
+
+model categorie {
+  id_categorie Int       @id @default(autoincrement())
+  nom          String    @unique @db.VarChar(50)
+  precise      precise[]
+}
+
+model commentaire {
+  id_commentaire   Int         @id @default(autoincrement())
+  texte            String      @db.VarChar(500)
+  date_publication DateTime    @db.Date
+  id_utilisateur   Int
+  id_snippet       Int
+  snippet          snippet     @relation(fields: [id_snippet], references: [id_snippet], onDelete: Cascade, onUpdate: NoAction)
+  utilisateur      utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model jeton {
+  id_jeton       Int         @id @default(autoincrement())
+  valeur_jeton   String      @unique @db.VarChar(320)
+  id_utilisateur Int
+  utilisateur    utilisateur @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model langage {
+  id_langage Int       @id @default(autoincrement())
+  nom        String    @unique @db.VarChar(50)
+  snippet    snippet[]
+}
+
+model precise {
+  id_snippet   Int
+  id_categorie Int
+  categorie    categorie @relation(fields: [id_categorie], references: [id_categorie], onDelete: NoAction, onUpdate: NoAction)
+  snippet      snippet   @relation(fields: [id_snippet], references: [id_snippet], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_snippet, id_categorie])
+}
+
+model snippet {
+  id_snippet     Int           @id @default(autoincrement())
+  titre          String        @db.VarChar(100)
+  contenu        String        @db.VarChar(500)
+  date_creation  DateTime      @db.Date
+  id_utilisateur Int
+  id_langage     Int
+  aime           aime[]
+  commentaire    commentaire[]
+  precise        precise[]
+  langage        langage       @relation(fields: [id_langage], references: [id_langage], onDelete: NoAction, onUpdate: NoAction)
+  utilisateur    utilisateur   @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model utilisateur {
+  id_utilisateur    Int           @id @default(autoincrement())
+  nom               String        @unique @db.VarChar(50)
+  email             String        @unique @db.VarChar(320)
+  mot_de_passe_hash String        @db.VarChar(320)
+  date_creation     DateTime      @default(now()) @db.Date
+  aime              aime[]
+  commentaire       commentaire[]
+  jeton             jeton[]
+  snippet           snippet[]
+}

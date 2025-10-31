@@ -5,12 +5,11 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-categories',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <ul class="category-list">
      @for(category of categories; track category.id_categorie){
-       <li>{{ category.nom }}</li>
+       <li class="beautiful-button">{{ category.nom }}</li>
       }
     </ul>
     

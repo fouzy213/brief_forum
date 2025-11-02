@@ -14,7 +14,7 @@ import { Languages } from "../languages/languages";
           <li class="beautiful-button">Add Subject</li>
           <li class="beautiful-button">Profile</li>
           <li class="beautiful-button" (click)="toggleCategories()">Catégories</li>
-          <li class="beautiful-button" (click)="toggleLanguages()">Languages</li>
+          <li class="beautiful-button" (click)="toggleLanguages()">Langages</li>
         </ul>
       </div>
      @if (showLanguages && showCategories) {

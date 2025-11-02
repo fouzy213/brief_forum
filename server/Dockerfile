@@ -1,12 +1,12 @@
+# Image Node pour dev
 FROM node:23-alpine3.21
 
 WORKDIR /app
 
 COPY package*.json ./
+RUN npm install
 
-RUN npm ci
-
-COPY ./ ./
+COPY . .
 
 EXPOSE 3002
 

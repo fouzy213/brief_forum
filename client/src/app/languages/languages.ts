@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-languages',
   imports: [CommonModule],
-  template: `<ul class="category-list">
+  template: `<ul class="languages-list">
      @for(language of languages; track language.id_language){
        <li class="beautiful-button">{{ language.nom }}</li>
       }

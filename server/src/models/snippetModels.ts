@@ -8,42 +8,39 @@ export const getAllSnippet = async () => {
       langage: true,
     },
   });
-}
+};
 
 export async function getSnippetById(id: number) {
-  return await prisma.snippet.findUnique({
+  return prisma.snippet.findUnique({
     where: { id_snippet: id },
     include: {
-      utilisateur: { select: { nom: true } },
-      langage: { select: { nom: true } },
+      utilisateur: true,
+      langage: true,
       precise: {
-        include: {
-          categorie: { select: { nom: true } }
-        }
+        include: { categorie: true },
       },
       commentaire: {
-        include: {
-          utilisateur: { select: { nom: true } }
-        }
-      }
-    }
+        include: { utilisateur: true },
+      },
+      aime: true,
+    },
   });
 }
 
 export async function getSnippetsByLangage(langageNom: string) {
   return await prisma.snippet.findMany({
     where: {
-      langage: { nom: langageNom }
+      langage: { nom: langageNom },
     },
     include: {
       utilisateur: { select: { nom: true } },
       langage: { select: { nom: true } },
       precise: {
         include: {
-          categorie: { select: { nom: true } }
-        }
-      }
-    }
+          categorie: { select: { nom: true } },
+        },
+      },
+    },
   });
 }
 
@@ -52,18 +49,18 @@ export async function getSnippetsByCategorie(categorieNom: string) {
     where: {
       precise: {
         some: {
-          categorie: { nom: categorieNom }
-        }
-      }
+          categorie: { nom: categorieNom },
+        },
+      },
     },
     include: {
       utilisateur: { select: { nom: true } },
       langage: { select: { nom: true } },
       precise: {
         include: {
-          categorie: { select: { nom: true } }
-        }
-      }
-    }
+          categorie: { select: { nom: true } },
+        },
+      },
+    },
   });
 }

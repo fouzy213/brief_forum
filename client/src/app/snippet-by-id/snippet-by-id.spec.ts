@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Categories} from './catogories';
+import { SnippetById } from './snippet-by-id';
 
-describe('Catogories', () => {
-  let component: Categories;
-  let fixture: ComponentFixture<Categories>;
+describe('SnippetById', () => {
+  let component: SnippetById;
+  let fixture: ComponentFixture<SnippetById>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Categories]
+      imports: [SnippetById]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Categories);
+    fixture = TestBed.createComponent(SnippetById);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

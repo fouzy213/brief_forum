@@ -5,21 +5,17 @@ import { HttpClient } from '@angular/common/http';
 export interface Language {
   id_language: number;
   nom: string;
-
 }
 
 @Injectable({
-  providedIn: 'root' 
-  
+  providedIn: 'root',
 })
 export class ApiLanguage {
-   url: string = environment.apiUrl;
-
+  url: string = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   fetchLanguage(): Observable<{ results: Language[] }> {
-   
-     return this.http.get<{ results: Language[] }>(`${this.url}/languages`);
+    return this.http.get<{ results: Language[] }>(`${this.url}/languages`);
   }
 }

@@ -1,29 +1,44 @@
+body,
+html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  font-family: Arial, sans-serif;
+}
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 section {
+  margin-top: 50px;
   background: #fff;
-  padding: 40px;
+  padding: 90px;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   width: 320px;
   text-align: center;
 }
 
-/* Titre */
 h1 {
   color: #333;
   margin-bottom: 24px;
   font-size: 1.8rem;
 }
 
-/* Conteneur des champs */
 .all_login {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 50px;
 }
 
-/* Champs de texte */
-input[type="text"],
-input[type="password"] {
+input[type='text'],
+input[type='password'] {
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -31,17 +46,15 @@ input[type="password"] {
   transition: 0.3s;
 }
 
-/* Effet au focus */
-input[type="text"]:focus,
-input[type="password"]:focus {
-  border-color: #5563DE;
+input[type='text']:focus,
+input[type='password']:focus {
+  border-color: #5563de;
   box-shadow: 0 0 5px rgba(85, 99, 222, 0.4);
   outline: none;
 }
 
-/* Bouton principal */
 button.primary {
-  background-color: #5563DE;
+  background-color: #5563de;
   color: white;
   border: none;
   padding: 12px;
@@ -51,12 +64,10 @@ button.primary {
   transition: 0.3s;
 }
 
-/* Effet au survol */
 button.primary:hover {
   background-color: #4050c8;
 }
 
-/* Effet au clic */
 button.primary:active {
   transform: scale(0.98);
 }

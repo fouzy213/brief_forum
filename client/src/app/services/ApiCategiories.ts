@@ -5,21 +5,17 @@ import { HttpClient } from '@angular/common/http';
 export interface Categorie {
   id_categorie: number;
   nom: string;
-
 }
 
 @Injectable({
-  providedIn: 'root' 
-  
+  providedIn: 'root',
 })
 export class ApiCategories {
-   url: string = environment.apiUrl;
-
+  url: string = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   fetchCategories(): Observable<{ results: Categorie[] }> {
-   
-     return this.http.get<{ results: Categorie[] }>(`${this.url}/categories`);
+    return this.http.get<{ results: Categorie[] }>(`${this.url}/categories`);
   }
 }

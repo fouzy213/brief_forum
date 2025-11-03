@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { AuthService } from '../services/ApiAuth';
+import { Router, RouterModule } from '@angular/router'; 
 @Component({
   selector: 'app-form-register',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterModule],
   template: `
     <div class="container">
       <h2>Formulaire d'inscription</h2>
@@ -131,8 +132,9 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 export class FormRegister {
   registrationForm: FormGroup;
   submittedData: any = null;
+  message='';
 
-  constructor(private formbuilder: FormBuilder) {
+  constructor(private formbuilder: FormBuilder,private router :Router,private authService: AuthService) {
     this.registrationForm = this.formbuilder.group({
       nom: ['', [Validators.required, Validators.minLength(2)]],
       pseudo: ['', [Validators.required, Validators.minLength(3)]],
@@ -161,11 +163,20 @@ export class FormRegister {
   passwordsMatch(): boolean {
     return this.password?.value === this.validatePassword?.value;
   }
+onSubmit() {
+  if (this.registrationForm.valid) {
+    this.authService.register(this.registrationForm.value).subscribe({
+      next: (res) => {
+        // Sauvegarde le token dans localStorage
+        localStorage.setItem('accessToken', res.token);
 
-  onSubmit() {
-    if (this.registrationForm.valid) {
-      this.submittedData = this.registrationForm.value;
-      console.log('Formulaire soumis:', this.submittedData);
-    }
+        // Redirection vers la page d'accueil
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Erreur inscription', err);
+      }
+    });
   }
+}
 }

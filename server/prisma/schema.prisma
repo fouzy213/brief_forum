@@ -7,6 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model utilisateur {
+  id_utilisateur    Int           @id @default(autoincrement())
+  nom               String        @unique @db.VarChar(50)
+  email             String        @unique @db.VarChar(320)
+  mot_de_passe_hash String        @db.VarChar(320)
+  date_creation     DateTime?     @db.Date
+  aime              aime[]
+  commentaire       commentaire[]
+  jeton             jeton[]
+  snippet           snippet[]
+}
+
 model aime {
   id_utilisateur Int
   id_snippet     Int
@@ -66,16 +78,4 @@ model snippet {
   precise        precise[]
   langage        langage       @relation(fields: [id_langage], references: [id_langage], onDelete: NoAction, onUpdate: NoAction)
   utilisateur    utilisateur   @relation(fields: [id_utilisateur], references: [id_utilisateur], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model utilisateur {
-  id_utilisateur    Int           @id @default(autoincrement())
-  nom               String        @unique @db.VarChar(50)
-  email             String        @unique @db.VarChar(320)
-  mot_de_passe_hash String        @db.VarChar(320)
-  date_creation     DateTime      @default(now()) @db.Date
-  aime              aime[]
-  commentaire       commentaire[]
-  jeton             jeton[]
-  snippet           snippet[]
 }

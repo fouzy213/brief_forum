@@ -5,6 +5,13 @@ import router from './routes';
 import cookieParser from 'cookie-parser';
 import cors, { type CorsOptions } from 'cors';
 import { PrismaClient } from '@prisma/client';
+import dotenv from "dotenv";
+
+const envFile = `.env.${process.env.NODE_ENV || "dev"}`;
+dotenv.config({ path: envFile });
+
+
+
 const app = express();
 const prisma = new PrismaClient();
 const PORT = 3002;

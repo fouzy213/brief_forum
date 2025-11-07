@@ -7,6 +7,16 @@ export interface Categorie {
   nom: string;
 }
 
+export interface Snippet {
+  id_snippet: number;
+  titre: string;
+  contenu: string;
+  date_creation: string;
+  id_utilisateur: number;
+  id_langage: number;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -18,4 +28,9 @@ export class ApiCategories {
   fetchCategories(): Observable<{ results: Categorie[] }> {
     return this.http.get<{ results: Categorie[] }>(`${this.url}/categories`);
   }
+
+fetchSnippetsByCategory(nom: string): Observable<Snippet[]> {
+  const encodedNom = encodeURIComponent(nom); // encode espaces, accents, caractères spéciaux
+  return this.http.get<Snippet[]>(`${this.url}/categories/${encodedNom}/snippets`);
+}
 }

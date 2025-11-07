@@ -16,8 +16,8 @@ import { ApiSnippet, SnippetType } from '../services/ApiSnippet';
       @if (snippet.precise.length > 0) {
       <div class="categories">
         <span>Catégories :</span>
-        @for(cat of snippet.precise; track cat.categorie.nom) {
-        <span class="category">{{ cat.categorie.nom }}</span>
+        @for(cat of snippet.precise; track cat.categorie.nom ) {
+        <span class="category"> {{ cat.categorie.nom }}</span>
         }
       </div>
       }

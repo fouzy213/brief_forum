@@ -7,4 +7,6 @@ const controller = new CategoriesController(request,response)
 controller.getAllCategories();
 })
 CategoriesController
+
+
 export default categoriesRouter

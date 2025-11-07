@@ -18,7 +18,6 @@ export default class User {
         this.created_at = created_at ?? new Date().toISOString();
     }
 
-    // Transforme une row Prisma en instance User
  static fromRow(row: utilisateur): User {
     return new User(row.email, row.nom, row.mot_de_passe_hash, row.date_creation.toISOString(), row.id_utilisateur);
 }

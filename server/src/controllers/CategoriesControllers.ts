@@ -11,4 +11,5 @@ export class CategoriesController extends Controller {
       this.response.status(500).json({ error: 'Erreur serveur' });
     }
   }
+
 }

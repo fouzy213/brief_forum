@@ -1,28 +1,68 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { computed, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environment';
-import { Observable } from 'rxjs';
-
-export interface User{
-    nom:string
-    email:string
-    pseudo:string
-    password:string
+import { Observable, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+export interface User {
+  nom: string;
+  email: string;
+  pseudo: string;
 }
 
-
-@Injectable({ 
-    providedIn: 'root' 
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-    
-    constructor(private http: HttpClient) {}
-    url :string = environment.apiUrl;
-    
+  private apiUrl = environment.apiUrl;
 
-  register(data: { nom:string; email: string; password: string }): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  // Signal global pour l'utilisateur
+  private _user = signal<User | null>(null);
+  user = computed(() => this._user());
+  isAuthenticated = computed(() => this._user() !== null);
 
-    return this.http.post(`${this.url}/auth/register`, data, { headers });
+  constructor(private http: HttpClient) {}
+
+  // ---- Enregistrement ----
+  register(data: {
+    nom: string;
+    pseudo: string;
+    email: string;
+    password: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, data, {
+      withCredentials: true,
+    });
+  }
+
+  // ---- Login ----
+  login(data: { email: string; password: string }): Observable<User> {
+    return this.http
+      .post<User>(`${this.apiUrl}/auth/login`, data, { 
+        withCredentials: true 
+      })
+      .pipe(
+        tap((res) => {
+          this._user.set(res);
+          console.log('User after login:', this._user());
+        })
+      );
+  }
+
+  // ---- Logout ----
+logout(): Observable<void> {
+  console.log('Tentative de logout, user:', this._user());
+  return this.http
+    .post<void>(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true })
+    .pipe(tap(() => {
+      console.log('Logout réussi, réinitialisation user');
+      this._user.set(null);
+    }));
+}
+
+  // ---- Récupérer l'utilisateur actuel ----
+  refreshUser(): Observable<User> {
+    return this.http
+      .get<User>(`${this.apiUrl}/auth/me`, { 
+        withCredentials: true 
+      })
+      .pipe(tap((user) => this._user.set(user)));
   }
 }

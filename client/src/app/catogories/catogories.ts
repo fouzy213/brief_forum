@@ -1,4 +1,4 @@
-import { ApiCategories, Categorie } from '../services/ApiCategiories';
+import { ApiCategories, Categorie ,Snippet} from '../services/ApiCategiories';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
@@ -16,7 +16,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class Categories implements OnInit {
   categories: Categorie[] = [];
-
+  snippets: Snippet[] = []
   constructor(private apiCategories: ApiCategories) {}
 
   ngOnInit() {
@@ -33,4 +33,5 @@ export class Categories implements OnInit {
   trackById(index: number, category: Categorie): number {
     return category.id_categorie;
   }
+  
 }

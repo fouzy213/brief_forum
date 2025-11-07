@@ -71,3 +71,14 @@ button.primary:hover {
 button.primary:active {
   transform: scale(0.98);
 }
+.error {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+button.primary:disabled {
+ background: #ccc;
+  cursor: not-allowed;
+}
+

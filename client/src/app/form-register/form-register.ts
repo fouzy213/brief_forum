@@ -166,13 +166,10 @@ export class FormRegister {
 onSubmit() {
   if (this.registrationForm.valid) {
     this.authService.register(this.registrationForm.value).subscribe({
-      next: (res) => {
-        // Sauvegarde le token dans localStorage
-        localStorage.setItem('accessToken', res.token);
+next: () => {
+  this.router.navigate(['/']);
+},
 
-        // Redirection vers la page d'accueil
-        this.router.navigate(['/']);
-      },
       error: (err) => {
         console.error('Erreur inscription', err);
       }

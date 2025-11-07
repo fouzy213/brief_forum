@@ -1,4 +1,4 @@
-import { Router } from "express";
+/* import { Router } from "express";
 import { UtilisateurController } from "../controllers/UserController";
 
 const userRouter = Router();
@@ -8,4 +8,4 @@ userRouter.get("/",(request, response) =>{
     controller.getAllUsers();
 });
 UtilisateurController;
-export default userRouter;
+export default userRouter; */

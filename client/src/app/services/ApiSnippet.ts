@@ -12,6 +12,7 @@ export interface SnippetType {
   precise: { categorie: { nom: string } }[];
   commentaire: { texte: string; utilisateur: { nom: string } }[];
   aime: any[];
+  categories?: string[];
 }
 
 @Injectable({

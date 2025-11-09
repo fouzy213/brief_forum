@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/ApiAuth';
 import { Categories } from '../catogories/catogories';
 import { Languages } from '../languages/languages';
-
+import { FilterService } from '../services/filterService';
 @Component({
   selector: 'app-navbar',
   imports: [CommonModule, RouterLink, Categories, Languages],
@@ -33,10 +33,10 @@ import { Languages } from '../languages/languages';
       </div>
 
       @if (showLanguages && showCategories) {
-      <app-categories />
+      <app-categories  />
       <app-languages />
       } @else if (showCategories) {
-      <app-categories />
+      <app-categories/>
       } @else if (showLanguages) {
       <app-languages />
       }
@@ -48,7 +48,7 @@ export class Navbar {
   showCategories = false;
   showLanguages = false;
 
-  constructor(public auth: AuthService) {
+  constructor(public auth: AuthService, private filterService: FilterService) {
 
     
   }
@@ -61,6 +61,8 @@ export class Navbar {
     this.showLanguages = !this.showLanguages;
     if (this.showLanguages) this.showCategories = false;
   }
+
+
 
   logout() {
     this.auth.logout().subscribe(() => {

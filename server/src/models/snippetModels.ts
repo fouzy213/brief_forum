@@ -2,13 +2,24 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const getAllSnippet = async () => {
-  return prisma.snippet.findMany({
+  const snippets = await prisma.snippet.findMany({
     include: {
-      utilisateur: true,
-      langage: true,
+      utilisateur: { select: { nom: true } },
+      langage: { select: { nom: true } },
+      precise: {
+        include: {
+          categorie: { select: { nom: true } },
+        },
+      },
     },
   });
+
+  return snippets.map(s => ({
+    ...s,
+    categories: s.precise.map(p => p.categorie.nom),
+  }));
 };
+
 
 export async function getSnippetById(id: number) {
   return prisma.snippet.findUnique({
@@ -27,7 +38,7 @@ export async function getSnippetById(id: number) {
   });
 }
 
-export async function getSnippetsByLangage(langageNom: string) {
+/* export async function getSnippetsByLangage(langageNom: string) {
   return await prisma.snippet.findMany({
     where: {
       langage: { nom: langageNom },
@@ -64,3 +75,4 @@ export async function getSnippetsByCategorie(categorieNom: string) {
     },
   });
 }
+ */

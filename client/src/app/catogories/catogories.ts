@@ -1,14 +1,17 @@
-import { ApiCategories, Categorie ,Snippet} from '../services/ApiCategiories';
+import { FilterService } from './../services/filterService';
+import { ApiCategories, Categorie, Snippet } from '../services/ApiCategiories';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-categories',
   imports: [CommonModule],
   template: `
     <ul class="category-list">
-      @for(category of categories; track category.id_categorie){
-      <li class="beautiful-button">{{ category.nom }}</li>
+      @for (category of categories; track category.id_categorie) {
+      <li class="beautiful-button" (click)="onCategorySelect(category.nom)">
+        {{ category.nom }}
+      </li>
       }
     </ul>
   `,
@@ -16,8 +19,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class Categories implements OnInit {
   categories: Categorie[] = [];
-  snippets: Snippet[] = []
-  constructor(private apiCategories: ApiCategories) {}
+  snippets: Snippet[] = [];
+
+  constructor(private apiCategories: ApiCategories, private filterService: FilterService) {}
 
   ngOnInit() {
     this.apiCategories.fetchCategories().subscribe({
@@ -33,5 +37,9 @@ export class Categories implements OnInit {
   trackById(index: number, category: Categorie): number {
     return category.id_categorie;
   }
-  
+
+  onCategorySelect(name: string) {
+    this.filterService.setCategory(name);
+    this.filterService.setLanguage(null);
+  }
 }

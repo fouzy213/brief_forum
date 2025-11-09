@@ -3,7 +3,7 @@ import { Snippet } from '../snippet/snippet';
 
 @Component({
   selector: 'app-home-page',
-  imports: [ Snippet],
+  imports: [Snippet],
   template: `
     <app-snippet />
   `,

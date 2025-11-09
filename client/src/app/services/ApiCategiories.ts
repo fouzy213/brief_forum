@@ -29,8 +29,4 @@ export class ApiCategories {
     return this.http.get<{ results: Categorie[] }>(`${this.url}/categories`);
   }
 
-fetchSnippetsByCategory(nom: string): Observable<Snippet[]> {
-  const encodedNom = encodeURIComponent(nom); // encode espaces, accents, caractères spéciaux
-  return this.http.get<Snippet[]>(`${this.url}/categories/${encodedNom}/snippets`);
-}
 }

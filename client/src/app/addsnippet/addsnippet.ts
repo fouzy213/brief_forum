@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-addsnippet',
@@ -10,9 +9,7 @@ import { Router } from '@angular/router';
     <div class="container">
       <h2>Ajout d'un Snippet</h2>
 
-      <!--       <form [formGroup]=
- --><!--       "addsubject" (ngSubmit)="onSubmit()"
- -->
+
       <div class="form-group">
         <label for="nom">Description *</label>
         <input type="text" id="nom" formControlName="nom" />
@@ -41,15 +38,5 @@ import { Router } from '@angular/router';
   styleUrl: './addsnippet.css',
 })
 export class Addsnippet {
-  /* constructor  (private formbuilder: FormBuilder,private router :Router)
-addsubject:FormGroup;
-this.addsubject = this.formbuilder.group({
-nom: ['', [Validators.required, Validators.minLength(2)]],
-date:['',[Validators.required,Validators.toString]]
-snippet:['',[Validators.required,Validators.minLength(120)]]
-})
-}
 
-
-onSubmit(){ */
 }

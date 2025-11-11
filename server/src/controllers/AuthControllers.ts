@@ -55,131 +55,144 @@ export default class AuthController extends Controller {
     }
   }
 
-async login() {
-  try {
-    const { email, password } = this.request.body;
-    if (!email || !password) {
-      return this.response
-        .status(400)
-        .json({ error: "Email ou mot de passe manquant" });
-    }
+  async login() {
+    try {
+      const { email, password } = this.request.body;
+      if (!email || !password) {
+        return this.response
+          .status(400)
+          .json({ error: "Email ou mot de passe manquant" });
+      }
 
-    // 1️ Récupérer l'utilisateur par email
-    const row = await prisma.utilisateur.findUnique({ where: { email } });
-    if (!row) {
-      return this.response
-        .status(401)
-        .json({ error: "Utilisateur non trouvé" });
-    }
+      // Récupérer l'utilisateur par email
+      const row = await prisma.utilisateur.findUnique({ where: { email } });
+      if (!row) {
+        return this.response
+          .status(401)
+          .json({ error: "Utilisateur non trouvé" });
+      }
 
-    const user = User.fromRow(row);
+      const user = User.fromRow(row);
+      const userId = user.getId();
+      if (!userId) {
+        return this.response
+          .status(500)
+          .json({ error: "Utilisateur invalide" });
+      }
 
-    //  Vérification de l'ID ici
-    const userId = user.getId();
-    if (!userId) {
-      return this.response.status(500).json({ error: "Utilisateur invalide" });
-    }
+      // Vérifier le mot de passe
+      const valid = await argon2.verify(user.getPasswordHash(), password);
+      if (!valid) {
+        return this.response
+          .status(401)
+          .json({ error: "Mot de passe incorrect" });
+      }
 
-    //  Vérifier le mot de passe
-    const valid = await argon2.verify(user.getPasswordHash(), password);
-    if (!valid) {
-      return this.response
-        .status(401)
-        .json({ error: "Mot de passe incorrect" });
-    }
-
-    //  Supprimer les anciens refresh tokens
-    await prisma.jeton.deleteMany({ where: { id_utilisateur: userId } });
-
-    //  Générer un nouveau refresh token
-    const refreshToken = TokenService.signRefreshToken({
-      sub: userId.toString(),
-    });
-
-    //   Sauvegarder le refresh token
-    await prisma.jeton.create({
-      data: {
-        valeur_jeton: refreshToken,
+      // ✅ SOLUTION TEMPORAIRE : Utilise un cast
+      (this.request.session as any).user = {
         id_utilisateur: userId,
-      },
-    });
+        nom: row.nom,
+        email: row.email,
+      };
 
-    //   Mettre le cookie
-    CookieService.setRefreshCookie(this.response, refreshToken);
+      // Supprimer les anciens refresh tokens
+      await prisma.jeton.deleteMany({ where: { id_utilisateur: userId } });
 
-    //  Générer un access token classique
-    const accessToken = jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
-      expiresIn: "1h",
-    });
+      // Générer un nouveau refresh token
+      const refreshToken = TokenService.signRefreshToken({
+        sub: userId.toString(),
+      });
 
-    //  Envoyer la réponse
-    return this.response.json({ token: accessToken, user: user.serialize() });
+      // Sauvegarder le refresh token
+      await prisma.jeton.create({
+        data: {
+          valeur_jeton: refreshToken,
+          id_utilisateur: userId,
+        },
+      });
 
-  } catch (err: any) {
-    console.error("❌ Erreur login:", err);
-    this.response.status(500).json({ error: "Erreur serveur" });
+      // Mettre le cookie
+      CookieService.setRefreshCookie(this.response, refreshToken);
+
+      // Générer un access token classique
+      const accessToken = jwt.sign({ id: userId }, process.env.JWT_SECRET!, {
+        expiresIn: "1h",
+      });
+
+      // ✅ SAUVEGARDE LA SESSION
+      this.request.session.save((err) => {
+        if (err) {
+          console.error("❌ Erreur sauvegarde session:", err);
+          return this.response.status(500).json({ error: "Erreur session" });
+        }
+
+        return this.response.json({
+          token: accessToken,
+          user: user.serialize(),
+        });
+      });
+    } catch (err: any) {
+      console.error("❌ Erreur login:", err);
+      this.response.status(500).json({ error: "Erreur serveur" });
+    }
   }
-}
-
-
 
   async logout() {
-  try {
-    // 1️⃣ Récupérer le token depuis le cookie ou l'authorization header
-    const token =
-      this.request.cookies?.refreshToken ||
-      this.request.headers.authorization?.split(" ")[1];
+    try {
+      // 1️⃣ Récupérer le token depuis le cookie ou l'authorization header
+      const token =
+        this.request.cookies?.refreshToken ||
+        this.request.headers.authorization?.split(" ")[1];
 
-    if (!token) {
+      if (!token) {
+        return this.response
+          .status(400)
+          .json({ message: "Aucun token fourni pour la déconnexion" });
+      }
+
+      // 2️⃣ Supprimer le token de la table jeton
+      await prisma.jeton.deleteMany({
+        where: { valeur_jeton: token },
+      });
+
+      // 3️⃣ Supprimer le cookie
+      CookieService.clearRefreshCookie(this.response);
+
+      // 4️⃣ Retourner une réponse de succès
       return this.response
-        .status(400)
-        .json({ message: "Aucun token fourni pour la déconnexion" });
+        .status(200)
+        .json({ message: "Déconnexion réussie ✅" });
+    } catch (err) {
+      console.error("❌ Erreur logout:", err);
+      return this.response.status(500).json({ message: "Erreur serveur" });
     }
-
-    // 2️⃣ Supprimer le token de la table jeton
-    await prisma.jeton.deleteMany({
-      where: { valeur_jeton: token },
-    });
-
-    // 3️⃣ Supprimer le cookie
-    CookieService.clearRefreshCookie(this.response);
-
-    // 4️⃣ Retourner une réponse de succès
-    return this.response.status(200).json({ message: "Déconnexion réussie ✅" });
-  } catch (err) {
-    console.error("❌ Erreur logout:", err);
-    return this.response.status(500).json({ message: "Erreur serveur" });
   }
-}
-async me() {
-  try {
-    // Récupérer le token depuis le cookie
-    const token = this.request.cookies?.refreshToken;
+  async me() {
+    try {
+      // Récupérer le token depuis le cookie
+      const token = this.request.cookies?.refreshToken;
 
-    if (!token) {
-      return this.response.status(401).json({ message: "Non authentifié" });
+      if (!token) {
+        return this.response.status(401).json({ message: "Non authentifié" });
+      }
+
+      // Vérifier le token
+      const decoded = TokenService.verifyRefreshToken(token);
+
+      // Récupérer l'utilisateur
+      const userId = parseInt(decoded.sub);
+      const user = await User.getById(userId);
+
+      if (!user) {
+        return this.response
+          .status(404)
+          .json({ message: "Utilisateur non trouvé" });
+      }
+
+      return this.response.status(200).json(user.serialize());
+    } catch (err) {
+      console.error("❌ Erreur me():", err);
+      return this.response.status(401).json({ message: "Token invalide" });
     }
-
-    // Vérifier le token
-    const decoded = TokenService.verifyRefreshToken(token);
-
-    // Récupérer l'utilisateur
-    const userId = parseInt(decoded.sub);
-    const user = await User.getById(userId);
-
-    if (!user) {
-      return this.response.status(404).json({ message: "Utilisateur non trouvé" });
-    }
-
-    return this.response.status(200).json(user.serialize());
-
-  } catch (err) {
-    console.error("❌ Erreur me():", err);
-    return this.response.status(401).json({ message: "Token invalide" });
   }
-}
-
-
-
-
 }

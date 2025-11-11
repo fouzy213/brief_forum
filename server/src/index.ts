@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import cors, { type CorsOptions } from 'cors';
 import { PrismaClient } from '@prisma/client';
 import dotenv from "dotenv";
-
+import session from 'express-session';
 const envFile = `.env.${process.env.NODE_ENV || "dev"}`;
 dotenv.config({ path: envFile });
 
@@ -29,6 +29,18 @@ const CORS_OPTIONS: CorsOptions = {
 
 app.use(cors(CORS_OPTIONS));
 app.use(cookieParser());
+app.use(session({
+  name: 'forum.sid',
+  secret: process.env.JWT_SECRET || 'fallback-secret', 
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, 
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: 'lax'
+  }
+}));
 app.use(express.static(join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

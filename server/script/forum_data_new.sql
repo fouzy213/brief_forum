@@ -152,26 +152,28 @@ INSERT INTO snippet (titre, contenu, date_creation, id_utilisateur, id_langage) 
 -----------------------------------------------------------
 -- 💬 Insertion des commentaires
 -----------------------------------------------------------
+-----------------------------------------------------------
+-- 💬 Insertion des commentaires (SYNTAXE CORRIGÉE)
+-----------------------------------------------------------
 INSERT INTO commentaire (texte, date_publication, id_utilisateur, id_snippet) VALUES
 ('Super utile, merci !', '2024-04-02', 2, 1),
 ('Je ne comprends pas la deuxième ligne.', '2024-04-03', 3, 1),
 ('Fonctionne parfaitement.', '2024-04-06', 1, 2),
 ('Astuce intéressante !', '2024-04-08', 2, 3),
 ('Très pratique pour se connecter à une base !', '2024-04-13', 1, 5),
-('J\'aime l\'exemple, clair et concis.', '2024-04-14', 2, 6),
-('Merci, cette requête SQL m\'a aidé.', '2024-04-15', 3, 7),
+('J''aime l''exemple, clair et concis.', '2024-04-14', 2, 6),  
+('Merci, cette requête SQL m''a aidé', '2024-04-15', 3, 7),  
 ('Simple et efficace !', '2024-04-16', 2, 8),
-('J\'ai pu lire mes fichiers sans souci.', '2024-04-17', 3, 9),
+('J''ai pu lire mes fichiers sans souci.', '2024-04-17', 3, 9), 
 ('Cool pour débuter en DOM !', '2024-04-18', 1, 10),
 ('Simple mais efficace pour débuter en Java.', '2024-05-02', 2, 11),
 ('PHP old-school mais ça marche toujours !', '2024-05-03', 1, 12),
 ('Rust est un peu verbeux mais performant.', '2024-05-04', 3, 13),
-('J\'adore la simplicité de Go.', '2024-05-05', 1, 14),
-('Exemple clair de gestion d\'erreur.', '2024-05-06', 3, 15),
+('J''adore la simplicité de Go.', '2024-05-05', 1, 14),    
+('Exemple clair de gestion d''erreur.', '2024-05-06', 3, 15),
 ('Bonne démo HTML + PHP.', '2024-05-07', 2, 16),
 ('Lecture de fichier Rust très claire.', '2024-05-08', 2, 17),
 ('La concurrence en Go est top !', '2024-05-09', 3, 18);
-
 -----------------------------------------------------------
 -- 🔑 Insertion des jetons
 -----------------------------------------------------------

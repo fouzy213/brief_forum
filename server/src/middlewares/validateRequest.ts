@@ -41,10 +41,3 @@ const signUpSchema = z.object({
     }
     );
     
-/* const loginSchema = z.object({
-    email:z.email('format email invalide'),
-    password:z
-    .string({error:"erreur mot de pass"})
-
-});
- */

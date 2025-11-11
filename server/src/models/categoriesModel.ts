@@ -1,4 +1,4 @@
-import { PrismaClient, categorie, snippet } from "@prisma/client";
+import { PrismaClient, categorie } from "@prisma/client";
 const prisma = new PrismaClient();
 
 

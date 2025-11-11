@@ -32,27 +32,4 @@ export class SnippetController extends Controller {
       console.error("❌ Erreur getSnippetById:", error);
       return this.response.status(500).json({ error: "Erreur serveur" });
     }
-  }
-
-  public async getSnippetsByLangage() {
-    try {
-      const nom = this.request.params.nom;
-      const Snippet = await snippetModel.getSnippetsByLangage(nom);
-      this.response.json(Snippet);
-    } catch (error) {
-      console.error("❌ Erreur getSnippetsByCategorie:", error);
-      this.response.status(500).json({ error: "Erreur serveur" });
-    }
-  }
-
-  public async getSnippetsByCategorie() {
-    try {
-      const nom = this.request.params.nom;
-      const Snippet = await snippetModel.getSnippetsByCategorie(nom);
-      this.response.json(Snippet);
-    } catch (error) {
-      console.error(error);
-      this.response.status(500).json({ error: "Erreur serveur" });
-    }
-  }
-}
+  }}

@@ -33,18 +33,16 @@ export class AuthService {
   }
 
   // ---- Login ----
-  login(data: { email: string; password: string }): Observable<User> {
-    return this.http
-      .post<User>(`${this.apiUrl}/auth/login`, data, { 
-        withCredentials: true 
-      })
-      .pipe(
-        tap((res) => {
-          this._user.set(res);
-          console.log('User after login:', this._user());
-        })
-      );
-  }
+login(data: { email: string; password: string }): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/auth/login`, data, { 
+    withCredentials: true 
+  }).pipe(
+    tap((response) => {
+      console.log('🔐 Réponse login:', response);
+      this._user.set(response.user); 
+    })
+  );
+}
 
   // ---- Logout ----
 logout(): Observable<void> {
